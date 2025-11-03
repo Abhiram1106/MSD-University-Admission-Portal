@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:render": "vite build && node scripts/copy-build.js",
+    "build": "vite build --mode production",
+    "build:render": "vite build --mode production && node scripts/copy-build.js",
     "copy:build": "node scripts/copy-build.js",
     "preview": "vite preview",
     "start": "node server.js"

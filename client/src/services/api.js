@@ -2,8 +2,16 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 // Use environment variable for backend URL, or fallback to same domain in production
-const API_BASE = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
+// In production (when REACT_APP_API_URL is not set), use empty string for same-origin API calls
+const API_BASE = process.env.REACT_APP_API_URL || '';
 const API_URL = `${API_BASE}/api`;
+
+console.log('API Configuration:', {
+  REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  API_BASE,
+  API_URL
+});
 
 // Create axios instance
 const api = axios.create({
