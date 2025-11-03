@@ -96,26 +96,35 @@ app.use(express.static(path.join(__dirname, 'public'), staticOptions));
 const PORT = process.env.PORT || 5000;
 const MONGO = process.env.MONGO_URI || 'mongodb://localhost:27017/uni_admission';
 
+// Connect to MongoDB (non-blocking)
 mongoose.connect(MONGO, {useNewUrlParser:true, useUnifiedTopology:true})
   .then(()=> {
     console.log('MongoDB connected');
     logger.info('MongoDB connected successfully');
   })
   .catch(err => {
-    console.error(err);
+    console.error('MongoDB connection error:', err);
     logger.error('MongoDB connection error:', err);
   });
 
 // Apply rate limiting
 app.use('/api/', apiLimiter);
 
+// Root health check (for load balancers)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Health check endpoint for Render
 app.get('/api/health', (req, res) => {
+  const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   res.status(200).json({ 
     status: 'ok', 
     message: 'EduVoyage Portal is running',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    mongodb: mongoStatus,
+    nodeEnv: process.env.NODE_ENV || 'development'
   });
 });
 
@@ -151,7 +160,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ msg: 'Internal server error' });
 });
 
-app.listen(PORT, ()=> {
-  console.log('Server running on port', PORT);
-  logger.info(`Server started on port ${PORT}`);
+// Start server - bind to 0.0.0.0 for Render
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+
+app.listen(PORT, HOST, ()=> {
+  console.log(`Server running on ${HOST}:${PORT}`);
+  logger.info(`Server started on ${HOST}:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Health check: http://${HOST}:${PORT}/api/health`);
 });
