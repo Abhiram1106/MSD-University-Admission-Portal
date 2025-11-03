@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:render": "vite build && node scripts/copy-build.js",
+    "copy:build": "node scripts/copy-build.js",
     "preview": "vite preview",
     "start": "node server.js"
   },
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
+    "fs-extra": "^11.3.2",
     "terser": "^5.44.0",
     "vite": "^5.0.0"
   }

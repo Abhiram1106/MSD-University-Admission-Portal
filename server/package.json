@@ -6,7 +6,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "seed": "node seedAdmin.js",
-    "build": "npm install && cd ../client && npm install && npm run build && node ../server/scripts/copy-build.js",
+    "build": "cd ../client && npm install && npm run build:render",
+    "render-build": "npm install && npm run build",
     "build:client": "cd ../client && npm install && npm run build",
     "copy:client": "node scripts/copy-build.js"
   },

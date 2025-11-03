@@ -92,6 +92,16 @@ mongoose.connect(MONGO, {useNewUrlParser:true, useUnifiedTopology:true})
 // Apply rate limiting
 app.use('/api/', apiLimiter);
 
+// Health check endpoint for Render
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    message: 'EduVoyage Portal is running',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/applications', appRoutes);
