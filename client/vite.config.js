@@ -44,7 +44,8 @@ export default defineConfig(({ mode }) => {
       }
     },
     define: {
-      'process.env.REACT_APP_API_URL': JSON.stringify(env.REACT_APP_API_URL)
+      'process.env.NODE_ENV': JSON.stringify(mode),
+      'process.env.REACT_APP_API_URL': JSON.stringify(env.REACT_APP_API_URL || '')
     }
   }
 })

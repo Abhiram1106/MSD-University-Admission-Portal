@@ -169,7 +169,7 @@ export const handleAPIError = (error) => {
   // Network error (no response from server)
   if (!error.response) {
     const message = error.message === 'Network Error' 
-      ? 'Unable to connect to server. Please ensure the backend is running on http://localhost:5000'
+      ? 'Unable to connect to server. Please check your internet connection and try again.'
       : error.message || 'Network error occurred';
     toast.error(message);
     return message;
